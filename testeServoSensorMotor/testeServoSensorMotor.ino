@@ -20,8 +20,10 @@ int anguloEsquerda = 180;
 int sensorDirecao; // para onde ele esta olhando (frente/direita/esquerda)
 
 // DISTANCIAS USADAS NO COD PRINCIPAL
-int distAtual; // distancia o objeto na frente do sensor
-int distMin = 15; // distancia minima para ele mudar a direcao do sensor
+int distFrente = 0;   // distancia o objeto na frente do sensor
+int distDireita = 0;  // distancia o objeto na direita do sensor
+int distEsquerda = 0; // distancia o objeto na esquerda do sensor
+int distMin = 15;     // distancia minima para ele mudar a direcao do sensor
 
 // COISAS PARA O "DEBOUNCE" DO SENSOR
 
@@ -184,10 +186,12 @@ void setup() {
   meuServo.attach(SERVO); // informa o pino do servo
 
   // MOTORES
+  pinMode(ENA, OUTPUT);
   pinMode(pinMotorDireitaFrente, OUTPUT);
   pinMode(pinMotorDireitaTras, OUTPUT);
   pinMode(pinMotorEsquerdaFrente, OUTPUT);
   pinMode(pinMotorEsquerdaTras, OUTPUT);
+  pinMode(ENB, OUTPUT);
 
   Serial.begin(9600);   // liga o terminal serial
 
@@ -195,13 +199,15 @@ void setup() {
   for (int i = 0; i < TAMANHO_FILTRO; i++) {
     leituras[i] = 0;
   }
-
+  
+  parar();
   olharFrente();
   Serial.println("--- ROBÔ INICIADO (Olhando Frente) ---");
 }
 
 void loop() {
-  distAtual = lerDist(); // le a distancia atual
+  olharFrente();
+  distFrente = lerDist(); // le a distancia atual
 
 
   Serial.print("Estado atual: "); //printa a o estado atual
