@@ -16,9 +16,6 @@ int anguloFrente = 0;
 int anguloDireita = 90;
 int anguloEsquerda = 180;
 
-// ESTADO DA DIRECAO QUE O SENSOR TA APONTADO 0=frente 1=direita 2=esquerda
-int sensorDirecao; // para onde ele esta olhando (frente/direita/esquerda)
-
 // DISTANCIAS USADAS NO COD PRINCIPAL
 int distFrente = 0;   // distancia o objeto na frente do sensor
 int distDireita = 0;  // distancia o objeto na direita do sensor
@@ -63,7 +60,6 @@ int lerDist(){
     totalLeituras = totalLeituras + leituras[indiceLeitura];
     // Avança para a próxima posição da lista
     indiceLeitura = (indiceLeitura + 1) % TAMANHO_FILTRO;
-    
     // Calcula a média 
     distanciaEstabilizada = totalLeituras / TAMANHO_FILTRO;
   }
@@ -73,7 +69,7 @@ int lerDist(){
   Serial.print(distanciaEstabilizada);
   Serial.println(" cm");
   
-  delay(100); 
+  delay(50); 
 
   return distanciaEstabilizada;
 }
@@ -106,10 +102,10 @@ void irFrente() {
 //FUNCAO VIRAR 
 void virarDireita() {
 
+  parar();
+
   analogWrite(ENA, velPWM);
   analogWrite(ENB, velPWM);
-
-  parar();
 
   digitalWrite(pinMotorDireitaFrente, LOW);
   digitalWrite(pinMotorDireitaTras, HIGH);
@@ -126,10 +122,10 @@ void virarDireita() {
 //FUNCAO VIRAR ESQUERDA
 void virarEsquerda() {
 
+  parar();
+
   analogWrite(ENA, velPWM);
   analogWrite(ENB, velPWM);
-
-  parar();
 
   digitalWrite(pinMotorDireitaFrente, HIGH);
   digitalWrite(pinMotorDireitaTras, LOW);
@@ -158,22 +154,23 @@ void darRe() {
   
 
   delay(400);
+
   parar();
 }
 
 void olharFrente(){
   meuServo.write(anguloFrente);
-  sensorDirecao = 0;
+  delay(200);
 }
 
 void olharDireita(){
   meuServo.write(anguloDireita);
-  sensorDirecao = 1;
+  delay(200);
 }
 
 void olharEsquerda(){
   meuServo.write(anguloEsquerda);
-  sensorDirecao = 2;
+  delay(200);
 }
 
 void setup() {
@@ -199,7 +196,7 @@ void setup() {
   for (int i = 0; i < TAMANHO_FILTRO; i++) {
     leituras[i] = 0;
   }
-  
+
   parar();
   olharFrente();
   Serial.println("--- ROBÔ INICIADO (Olhando Frente) ---");
@@ -209,77 +206,93 @@ void loop() {
   olharFrente();
   distFrente = lerDist(); // le a distancia atual
 
-
-  Serial.print("Estado atual: "); //printa a o estado atual
-  if(sensorDirecao == 0) {
-    Serial.print("Frente (0)");
-  }
-  else if(sensorDirecao == 1) {
-    Serial.print("Direita (180)");
-  }
-  else if(sensorDirecao == 2) {
-    Serial.print("Esquerda (90)");
-  }
-
   // PARTE PRINCIPAL
 
   // COM OBSTACULO
 
-  if(distAtual < distMin){  // se estiver um obstaculo na frente do sensor
+  if(distFrente < distMin && distFrente > 5){  // se estiver um obstaculo na frente do sensor
    
-    if (sensorDirecao == 0){  // se está no estado = 0 (se o sensor esta olhando para frente)
-      Serial.println("[!] Algo na FRENTE -> Virando sensor para DIREITA...");
-      olharDireita();
-      delay(2000); 
-      distAtual = lerDist();
-    }
- 
-    else if (sensorDirecao == 1){
-      // se esta no estado = 1 (se o sensor esta olhando para a direita)
-      Serial.println("[!] Algo na DIREITA -> Virando sensor para ESQUERDA...");
-      olharEsquerda();
-      delay(2000);
-      distAtual = lerDist();
-    }
+    parar();
 
-    else if (sensorDirecao == 2){
-        // se esta no estado = 2 (se o sensor esta olhando para a esquerda)
-      Serial.println("[!] Algo na ESQUERDA -> Voltando sensor para FRENTE...");
+    Serial.println("Obstaculo na frente! CHECANDO DIREITA");
+
+    olharDireita();
+    distDireita = lerDist();
+    Serial.println("Distancia Direita: ");
+    Serial.print(distDireita);
+
+    Serial.println("Obstaculo na frente! CHECANDO ESQUERDA");
+
+    olharEsquerda();
+    distEsquerda = lerDist();
+    Serial.print("Distancia Esquerda: ");
+    Serial.print(distEsquerda);
+
+    olharFrente();
+
+    if (distDireita >= distMin) {
+      // LIVRE DIREITA
+      Serial.println("DIREITA LIVRE -> VIRANDO DIREITA");
       olharFrente();
-      delay(2000);
-      distAtual = lerDist();
+      virarDireita();
+    }
+    else if (distEsquerda >= distMin){
+      // LIVRE ESQUERDA
+      Serial.println("ESQUERDA LIVRE -> VIRANDO ESQUERDA");
+      olharFrente();
+      virarEsquerda();
+
     }
     else {
-      Serial.println("Estado direçao com problema na parte principal com obstaculo");
+      Serial.println("[!] BLOQUEADO EM TUDO! Iniciando manobra de RÉ...");
+
+      bool achouSaida = false;
+
+      while (!achouSaida) {
+        Serial.println("Dando ré...");
+        darRe();
+        parar();
+
+        // Checa Direita
+        Serial.println("Checando Direita...");
+        olharDireita();
+        distDireita = lerDist();
+
+        if (distDireita >= distMin) {
+          Serial.println("[->] Saída encontrada na Direita!");
+          olharFrente();
+          virarDireita();
+          achouSaida = true;
+          break;
+        }
+
+        // Checa Esquerda
+        Serial.println("Checando Esquerda...");
+        olharEsquerda();
+        distEsquerda = lerDist();
+
+        if (distEsquerda >= distMin || distEsquerda == 0) {
+          Serial.println("[<-] Saída encontrada na Esquerda!");
+          olharFrente();
+          virarEsquerda();
+          achouSaida = true;
+          break;
+        }
+
+        Serial.println("[!] LATERAIS BLOQUEADAS. Dando ré novamente...");
+      }
+
     }
+   
   }
 
   // SEM OBSTACULO
 
   else {
     
-    if (sensorDirecao == 0){  
-      Serial.println("[I] INDO FRENTE");
-      irFrente();
-      olharFrente();
-    }
- 
-    else if (sensorDirecao == 1){
-
-      Serial.println("[->] VIRANDO DIREITA");
-      virarDireita();
-      olharFrente();
-    }
-
-    else if (sensorDirecao == 2){
-      Serial.println("[<-] VIRANDO ESQUERDA");
-      virarEsquerda();
-      olharFrente();
-    }
-    else{
-      Serial.println("Estado direcao com problema na parte principal sem obstaculo");
-      olharFrente();
-    }
+   Serial.println("Frente livre");
+   olharFrente();
+   irFrente();
 
   }
   
