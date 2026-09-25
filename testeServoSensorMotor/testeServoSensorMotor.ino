@@ -9,11 +9,11 @@
 Servo meuServo;
 
 // VELOCIDADE PWM
-int velPWM = 100;
+int velPWM = 120;
 
 // ANGULOS
-int anguloFrente = 0;
-int anguloDireita = 90;
+int anguloFrente = 90;
+int anguloDireita = 0;
 int anguloEsquerda = 180;
 
 // DISTANCIAS USADAS NO COD PRINCIPAL
