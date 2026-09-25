@@ -25,10 +25,10 @@ int distanciaEstabilizada = 0;  // distancia final
 
 // MOTORES (TEM QUE VER QUAL É QUAL LOL)
 #define ENA 5           // pino ENA
-#define pinMotor1a 6    // pino motor 1 pra FRENTE (da direita)
-#define pinMotor1b 7    // pino motor 1 pra TRAS   (da direita)
-#define pinMotor2a 8    // pino motor 2 pra FRENTE (da esquerda)
-#define pinMotor2b 9    // pino motor 2 pra TRAS   (da esquerda)
+#define pinMotorDireitaFrente 6    // pino motor 1 pra FRENTE (da direita)
+#define pinMotorDireitaTras 7    // pino motor 1 pra TRAS   (da direita)
+#define pinMotorEsquerdaFrente 8    // pino motor 2 pra FRENTE (da esquerda)
+#define pinMotorEsquerdaTras 9    // pino motor 2 pra TRAS   (da esquerda)
 #define ENB 10          // pino ENB
 
 // FUNCAO LER DISTANCIA ----- RETORNA A DISTANCIA "LIMPA"
@@ -70,27 +70,27 @@ int lerDist(){
 
 // FUNCAO PARAR O CARRO
 void parar() {
-  digitalWrite(pinMotor1a, LOW);
-  digitalWrite(pinMotor1b, LOW);
-  digitalWrite(pinMotor2a, LOW);
-  digitalWrite(pinMotor2b, LOW);
+  digitalWrite(pinMotorDireitaFrente, LOW);
+  digitalWrite(pinMotorDireitaTras, LOW);
+  digitalWrite(pinMotorEsquerdaFrente, LOW);
+  digitalWrite(pinMotorEsquerdaTras, LOW);
 }
 
 // FUNCAO IR PARA FRENTE
 void irFrente() {
   parar();
   for (int velocidade = 100; velocidade >= 45; velocidade--) {
-    analogWrite(pinMotor1a, velocidade);
-    analogWrite(pinMotor2a, velocidade);
+    analogWrite(pinMotorDireitaFrente, velocidade);
+    analogWrite(pinMotorEsquerdaFrente, velocidade);
     delay(1);
   }
 }
 
-//FUNCAO VIRAR DIREITA
+//FUNCAO VIRAR 
 void virarDireita() {
   parar();
-  analogWrite(pinMotor1a, 100);
-  analogWrite(pinMotor2b, 100);
+  analogWrite(pinMotorDireitaTras, 100);
+  analogWrite(pinMotorEsquerdaFrente, 100);
   delay(100);
   parar();
 }
@@ -98,8 +98,8 @@ void virarDireita() {
 //FUNCAO VIRAR ESQUERDA
 void virarEsquerda() {
   parar();
-  analogWrite(pinMotor1b, 100);
-  analogWrite(pinMotor2a, 100);
+  analogWrite(pinMotorDireitaFrente, 100);
+  analogWrite(pinMotorEsquerdaTras, 100);
   delay(100);
   parar();
 }
@@ -108,8 +108,8 @@ void virarEsquerda() {
 void darRe() {
   parar();
   for (int velocidade = 100; velocidade >= 30; velocidade--) {
-    analogWrite(pinMotor1b, velocidade);
-    analogWrite(pinMotor2b, velocidade);
+    analogWrite(pinMotorDireitaTras, velocidade);
+    analogWrite(pinMotorEsquerdaFrente, velocidade);
     delay(1);
   }
 }
@@ -124,10 +124,10 @@ void setup() {
   meuServo.attach(SERVO); // informa o pino do servo
 
   // MOTORES
-  pinMode(pinMotor1, OUTPUT);
-  pinMode(pinMotor2, OUTPUT);
-  pinMode(pinMotor3, OUTPUT);
-  pinMode(pinMotor4, OUTPUT);
+  pinMode(pinMotorDireitaFrente, OUTPUT);
+  pinMode(pinMotorDireitaTras, OUTPUT);
+  pinMode(pinMotorEsquerdaFrente, OUTPUT);
+  pinMode(pinMotorEsquerdaTras, OUTPUT);
 
   Serial.begin(9600);   // liga o terminal serial
 
