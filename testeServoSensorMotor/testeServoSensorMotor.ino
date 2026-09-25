@@ -23,12 +23,12 @@ int indiceLeitura = 0;          // indice da leitura atual
 long totalLeituras = 0;         // soma das leituras
 int distanciaEstabilizada = 0;  // distancia final 
 
-// MOTORES (TEM QUE VER QUAL É QUAL LOL)
+// MOTORES (TEM QUE VER QUAL É QUAL)
 #define ENA 5           // pino ENA
-#define pinMotorDireitaFrente 6    // pino motor 1 pra FRENTE (da direita)
-#define pinMotorDireitaTras 7    // pino motor 1 pra TRAS   (da direita)
-#define pinMotorEsquerdaFrente 8    // pino motor 2 pra FRENTE (da esquerda)
-#define pinMotorEsquerdaTras 9    // pino motor 2 pra TRAS   (da esquerda)
+#define pinMotorDireitaFrente 6     // pino motor 1 pra FRENTE (da DIREITA)
+#define pinMotorDireitaTras 7       // pino motor 1 pra TRAS   (da DIREITA)
+#define pinMotorEsquerdaFrente 8    // pino motor 2 pra FRENTE (da ESQUERDA)
+#define pinMotorEsquerdaTras 9      // pino motor 2 pra TRAS   (da ESQUERDA)
 #define ENB 10          // pino ENB
 
 // FUNCAO LER DISTANCIA ----- RETORNA A DISTANCIA "LIMPA"
