@@ -8,8 +8,16 @@
 #define SERVO 3  // pino do servo
 Servo meuServo;
 
+// VELOCIDADE PWM
+int velPWM = 100;
+
+// ANGULOS
+int anguloFrente = 0;
+int anguloDireita = 90;
+int anguloEsquerda = 180;
+
 // ESTADO DA DIRECAO QUE O SENSOR TA APONTADO 0=frente 1=direita 2=esquerda
-int estadoDirecao; // para onde ele esta olhando (frente/direita/esquerda)
+int sensorDirecao; // para onde ele esta olhando (frente/direita/esquerda)
 
 // DISTANCIAS USADAS NO COD PRINCIPAL
 int distAtual; // distancia o objeto na frente do sensor
@@ -63,7 +71,7 @@ int lerDist(){
   Serial.print(distanciaEstabilizada);
   Serial.println(" cm");
   
-  delay(100); // Leituras estaveis a cada 100ms
+  delay(100); 
 
   return distanciaEstabilizada;
 }
@@ -78,40 +86,92 @@ void parar() {
 
 // FUNCAO IR PARA FRENTE
 void irFrente() {
+
   parar();
-  for (int velocidade = 100; velocidade >= 45; velocidade--) {
-    analogWrite(pinMotorDireitaFrente, velocidade);
-    analogWrite(pinMotorEsquerdaFrente, velocidade);
-    delay(1);
-  }
+
+  analogWrite(ENA, velPWM); 
+  analogWrite(ENB, velPWM);
+
+
+  digitalWrite(pinMotorDireitaFrente, HIGH);
+  digitalWrite(pinMotorDireitaTras, LOW);
+
+  digitalWrite(pinMotorEsquerdaFrente, HIGH);
+  digitalWrite(pinMotorEsquerdaTras, LOW);
+  
 }
 
 //FUNCAO VIRAR 
 void virarDireita() {
+
+  analogWrite(ENA, velPWM);
+  analogWrite(ENB, velPWM);
+
   parar();
-  analogWrite(pinMotorDireitaTras, 100);
-  analogWrite(pinMotorEsquerdaFrente, 100);
-  delay(100);
+
+  digitalWrite(pinMotorDireitaFrente, LOW);
+  digitalWrite(pinMotorDireitaTras, HIGH);
+
+  digitalWrite(pinMotorEsquerdaFrente, HIGH);
+  digitalWrite(pinMotorEsquerdaTras, LOW);
+
+
+  delay(400);
+
   parar();
 }
 
 //FUNCAO VIRAR ESQUERDA
 void virarEsquerda() {
+
+  analogWrite(ENA, velPWM);
+  analogWrite(ENB, velPWM);
+
   parar();
-  analogWrite(pinMotorDireitaFrente, 100);
-  analogWrite(pinMotorEsquerdaTras, 100);
-  delay(100);
+
+  digitalWrite(pinMotorDireitaFrente, HIGH);
+  digitalWrite(pinMotorDireitaTras, LOW);
+
+  digitalWrite(pinMotorEsquerdaFrente, LOW);
+  digitalWrite(pinMotorEsquerdaTras, HIGH);
+
+  delay(400);
+
   parar();
 }
 
 //FUNCAO IR PARA TRAS
 void darRe() {
+
   parar();
-  for (int velocidade = 100; velocidade >= 30; velocidade--) {
-    analogWrite(pinMotorDireitaTras, velocidade);
-    analogWrite(pinMotorEsquerdaFrente, velocidade);
-    delay(1);
-  }
+
+  analogWrite(ENA, velPWM);
+  analogWrite(ENB, velPWM);
+
+  digitalWrite(pinMotorDireitaFrente, LOW);
+  digitalWrite(pinMotorDireitaTras, HIGH);
+  
+  digitalWrite(pinMotorEsquerdaFrente, LOW);
+  digitalWrite(pinMotorEsquerdaTras, HIGH);
+  
+
+  delay(400);
+  parar();
+}
+
+void olharFrente(){
+  meuServo.write(anguloFrente);
+  sensorDirecao = 0;
+}
+
+void olharDireita(){
+  meuServo.write(anguloDireita);
+  sensorDirecao = 1;
+}
+
+void olharEsquerda(){
+  meuServo.write(anguloEsquerda);
+  sensorDirecao = 2;
 }
 
 void setup() {
@@ -136,8 +196,7 @@ void setup() {
     leituras[i] = 0;
   }
 
-  estadoDirecao = 0; // 0 = olhando pra frente
-  meuServo.write(0);
+  olharFrente();
   Serial.println("--- ROBÔ INICIADO (Olhando Frente) ---");
 }
 
@@ -146,13 +205,13 @@ void loop() {
 
 
   Serial.print("Estado atual: "); //printa a o estado atual
-  if(estadoDirecao == 0) {
+  if(sensorDirecao == 0) {
     Serial.print("Frente (0)");
   }
-  else if(estadoDirecao == 1) {
+  else if(sensorDirecao == 1) {
     Serial.print("Direita (180)");
   }
-  else if(estadoDirecao == 2) {
+  else if(sensorDirecao == 2) {
     Serial.print("Esquerda (90)");
   }
 
@@ -162,28 +221,25 @@ void loop() {
 
   if(distAtual < distMin){  // se estiver um obstaculo na frente do sensor
    
-    if (estadoDirecao == 0){  // se está no estado = 0 (se o sensor esta olhando para frente)
+    if (sensorDirecao == 0){  // se está no estado = 0 (se o sensor esta olhando para frente)
       Serial.println("[!] Algo na FRENTE -> Virando sensor para DIREITA...");
-      meuServo.write(0);
-      estadoDirecao = 1; // muda o estado para estado == 1 (olhando direita)
+      olharDireita();
       delay(2000); 
       distAtual = lerDist();
     }
  
-    else if (estadoDirecao == 1){
+    else if (sensorDirecao == 1){
       // se esta no estado = 1 (se o sensor esta olhando para a direita)
       Serial.println("[!] Algo na DIREITA -> Virando sensor para ESQUERDA...");
-      meuServo.write(180);
-      estadoDirecao = 2; // muda o estado para o estado == 2 (olhando para esquerda)
+      olharEsquerda();
       delay(2000);
       distAtual = lerDist();
     }
 
-    else if (estadoDirecao == 2){
+    else if (sensorDirecao == 2){
         // se esta no estado = 2 (se o sensor esta olhando para a esquerda)
       Serial.println("[!] Algo na ESQUERDA -> Voltando sensor para FRENTE...");
-      meuServo.write(90);
-      estadoDirecao = 0; // muda o estado para o estado == 0 (olhando para frente)
+      olharFrente();
       delay(2000);
       distAtual = lerDist();
     }
@@ -196,24 +252,30 @@ void loop() {
 
   else {
     
-    if (estadoDirecao == 0){  
+    if (sensorDirecao == 0){  
       Serial.println("[I] INDO FRENTE");
       irFrente();
+      olharFrente();
     }
  
-    else if (estadoDirecao == 1){
+    else if (sensorDirecao == 1){
 
       Serial.println("[->] VIRANDO DIREITA");
       virarDireita();
+      olharFrente();
     }
 
-    else if (estadoDirecao == 2){
+    else if (sensorDirecao == 2){
       Serial.println("[<-] VIRANDO ESQUERDA");
       virarEsquerda();
+      olharFrente();
     }
     else{
-      Serial.println("PEstado direcao com problema na parte principal sem obstaculo");
+      Serial.println("Estado direcao com problema na parte principal sem obstaculo");
+      olharFrente();
     }
+
+  }
   
   delay(500); 
 }
