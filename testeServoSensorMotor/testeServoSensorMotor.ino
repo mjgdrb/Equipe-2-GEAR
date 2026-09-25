@@ -48,7 +48,7 @@ int lerDist(){
   digitalWrite(TRIG, LOW);
 
   long tempo = pulseIn(ECHO, HIGH, 30000); // Timeout de 30ms para não travar o código
-  int distanciaAtual = tempo / 58;
+  int distanciaAtual = tempo * 0.034 / 2;
 
   // Filtro 
   if (distanciaAtual > 2 && distanciaAtual < 100) {
