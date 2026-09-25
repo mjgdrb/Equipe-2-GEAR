@@ -7,10 +7,10 @@ Servo meuServo;
 #define echoPin 4        // Echo Pin Of HC-SR04
 
 // motores
-#define MLa 8                   //left motor 1st pin
-#define MLb 9                  //left motor 2nd pin
-#define MRa 6               //right motor 1st pin
-#define MRb 7               //right motor 2nd pin
+#define MEf 8                 //esquerda motor frente
+#define MEt 9                 //esquerda motor tras
+#define MDf 6                 //direita motor frente
+#define MDt 7                 //direita motor tras
 #define ENA 10
 #define ENB 5
 
@@ -41,20 +41,20 @@ int medeDist(){
 
 void parar(){
 
-  digitalWrite(MLa, LOW);
-  digitalWrite(MLb, LOW);
+  digitalWrite(MEf, LOW);
+  digitalWrite(MEt, LOW);
 
-  digitalWrite(MRa, LOW);
-  digitalWrite(MRb, LOW);
+  digitalWrite(MDf, LOW);
+  digitalWrite(MDt, LOW);
 }
 
 void irFrente(){
 
-  digitalWrite(MRa, HIGH);
-  digitalWrite(MRb, LOW);
+  digitalWrite(MDf, HIGH);
+  digitalWrite(MFt, LOW);
 
-  digitalWrite(MLa, HIGH);
-  digitalWrite(MLb, LOW);
+  digitalWrite(MEf, HIGH);
+  digitalWrite(MEt, LOW);
 
   analogWrite(ENA, speed);
   analogWrite(ENB, speed);
@@ -63,14 +63,15 @@ void irFrente(){
 
 void irDireita(){
 
-  digitalWrite(MRa, LOW);
-  digitalWrite(MRb, LOW);
-
-  digitalWrite(MLa, HIGH);
-  digitalWrite(MLb, LOW);
-
   analogWrite(ENA, speed);
   analogWrite(ENB, speed); 
+
+  digitalWrite(MDf, LOW);
+  digitalWrite(MDt, HIGH);
+
+  digitalWrite(MEf, HIGH);
+  digitalWrite(MEt, LOW);
+
 
 }
 
@@ -79,23 +80,26 @@ void irEsquerda(){
   analogWrite(ENA, speed);
   analogWrite(ENB, speed);
 
-  digitalWrite(MRa, HIGH);
-  digitalWrite(MRb, LOW);
+  digitalWrite(MDf, HIGH);
+  digitalWrite(MDt, LOW);
 
-  digitalWrite(MLa, LOW);
-  digitalWrite(MLb, LOW);
+  digitalWrite(MEf, LOW);
+  digitalWrite(MEt, HIGH);
 
 }
 
 void darRe(){
-  digitalWrite(MRa, LOW);
-  digitalWrite(MRb, HIGH);
-
-  digitalWrite(MLa, LOW);
-  digitalWrite(MLb, HIGH);
 
   analogWrite(ENA, speed);
   analogWrite(ENB, speed);
+  
+  digitalWrite(MDf, LOW);
+  digitalWrite(MDt, HIGH);
+
+  digitalWrite(MEf, LOW);
+  digitalWrite(MEt, HIGH);
+
+
 
 }
 
@@ -189,12 +193,12 @@ void loop() {
     }
     else if(estadoDirecao == 1){
       parar();
-      // fazer funcao irDireita();
+      irDireita();
       delay(2000);
     }
     else if(estadoDirecao == 2){
       parar();
-      // fazer funcao irEsquerda()
+      irEsquerda();
       delay(2000);
     }
     else {
