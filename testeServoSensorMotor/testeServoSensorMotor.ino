@@ -69,7 +69,7 @@ int lerDist(){
   Serial.print(distanciaEstabilizada);
   Serial.println(" cm");
   
-  delay(50); 
+  delay(20); 
 
   return distanciaEstabilizada;
 }
@@ -113,7 +113,7 @@ void virarDireita() {
   digitalWrite(pinMotorEsquerdaFrente, HIGH);
   digitalWrite(pinMotorEsquerdaTras, LOW);
 
-  delay(400);
+  delay(4000);
 
   parar();
 }
@@ -132,7 +132,7 @@ void virarEsquerda() {
   digitalWrite(pinMotorEsquerdaFrente, LOW);
   digitalWrite(pinMotorEsquerdaTras, HIGH);
 
-  delay(400);
+  delay(4000);
 
   parar();
 }
@@ -151,24 +151,24 @@ void darRe() {
   digitalWrite(pinMotorEsquerdaFrente, LOW);
   digitalWrite(pinMotorEsquerdaTras, HIGH);
 
-  delay(400);
+  delay(4000);
 
   parar();
 }
 
 void olharFrente(){
   meuServo.write(anguloFrente);
-  delay(200);
+  delay(2000);
 }
 
 void olharDireita(){
   meuServo.write(anguloDireita);
-  delay(200);
+  delay(2000);
 }
 
 void olharEsquerda(){
   meuServo.write(anguloEsquerda);
-  delay(200);
+  delay(2000);
 }
 
 void setup() {
@@ -294,5 +294,4 @@ void loop() {
 
   }
   
-  delay(500); 
 }
