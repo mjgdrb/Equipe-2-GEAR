@@ -113,7 +113,6 @@ void virarDireita() {
   digitalWrite(pinMotorEsquerdaFrente, HIGH);
   digitalWrite(pinMotorEsquerdaTras, LOW);
 
-
   delay(400);
 
   parar();
@@ -151,7 +150,6 @@ void darRe() {
   
   digitalWrite(pinMotorEsquerdaFrente, LOW);
   digitalWrite(pinMotorEsquerdaTras, HIGH);
-  
 
   delay(400);
 
