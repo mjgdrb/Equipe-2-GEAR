@@ -108,12 +108,12 @@ void virarDireita() {
   analogWrite(ENB, velPWM);
 
   digitalWrite(pinMotorDireitaFrente, LOW);
-  digitalWrite(pinMotorDireitaTras, HIGH);
+  digitalWrite(pinMotorDireitaTras, LOW);
 
   digitalWrite(pinMotorEsquerdaFrente, HIGH);
   digitalWrite(pinMotorEsquerdaTras, LOW);
 
-  delay(4000);
+  delay(500);
 
   parar();
 }
@@ -130,9 +130,9 @@ void virarEsquerda() {
   digitalWrite(pinMotorDireitaTras, LOW);
 
   digitalWrite(pinMotorEsquerdaFrente, LOW);
-  digitalWrite(pinMotorEsquerdaTras, HIGH);
+  digitalWrite(pinMotorEsquerdaTras, LOW);
 
-  delay(4000);
+  delay(500);
 
   parar();
 }
@@ -151,24 +151,24 @@ void darRe() {
   digitalWrite(pinMotorEsquerdaFrente, LOW);
   digitalWrite(pinMotorEsquerdaTras, HIGH);
 
-  delay(4000);
+  delay(500);
 
   parar();
 }
 
 void olharFrente(){
   meuServo.write(anguloFrente);
-  delay(2000);
+  delay(1000);
 }
 
 void olharDireita(){
   meuServo.write(anguloDireita);
-  delay(2000);
+  delay(1000);
 }
 
 void olharEsquerda(){
   meuServo.write(anguloEsquerda);
-  delay(2000);
+  delay(1000);
 }
 
 void setup() {
@@ -203,7 +203,7 @@ void setup() {
 void loop() {
   olharFrente();
   distFrente = lerDist(); // le a distancia atual
-
+  delay(500);
   // PARTE PRINCIPAL
 
   // COM OBSTACULO
@@ -288,9 +288,11 @@ void loop() {
 
   else {
     
-   Serial.println("Frente livre");
-   olharFrente();
-   irFrente();
+    Serial.println("Frente livre");
+    olharFrente();
+    irFrente();
+    delay(1000);
+    parar();
 
   }
   
