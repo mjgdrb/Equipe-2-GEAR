@@ -32,7 +32,7 @@ int medeDist(){
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
-  duration = pulseIn(echoPin, HIGH, 3000);
+  duration = pulseIn(echoPin, HIGH, 30000);
 
   distance = duration * 0.034 / 2;
 
@@ -50,14 +50,14 @@ void parar(){
 
 void irFrente(){
 
+  analogWrite(ENA, speed);
+  analogWrite(ENB, speed);
+
   digitalWrite(MDf, HIGH);
-  digitalWrite(MFt, LOW);
+  digitalWrite(MDt, LOW);
 
   digitalWrite(MEf, HIGH);
   digitalWrite(MEt, LOW);
-
-  analogWrite(ENA, speed);
-  analogWrite(ENB, speed);
 
 }
 
@@ -71,7 +71,6 @@ void irDireita(){
 
   digitalWrite(MEf, HIGH);
   digitalWrite(MEt, LOW);
-
 
 }
 
@@ -98,8 +97,6 @@ void darRe(){
 
   digitalWrite(MEf, LOW);
   digitalWrite(MEt, HIGH);
-
-
 
 }
 
