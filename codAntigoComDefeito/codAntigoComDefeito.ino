@@ -17,8 +17,11 @@ Servo meuServo;
 long duration;
 int distance, distAtual, estadoDirecao;
 int distMin = 15;
-int contadorViradas = 0;
 int speed = 100;
+
+int anguloFrente = 0;
+int anguloDireita = 90;
+int anguloEsquerda = 180;
 
 
 int medeDist(){
@@ -73,14 +76,14 @@ void irDireita(){
 
 void irEsquerda(){
 
+  analogWrite(ENA, speed);
+  analogWrite(ENB, speed);
+
   digitalWrite(MRa, HIGH);
   digitalWrite(MRb, LOW);
 
   digitalWrite(MLa, LOW);
   digitalWrite(MLb, LOW);
-
-  analogWrite(ENA, speed);
-  analogWrite(ENB, speed);
 
 }
 
@@ -98,21 +101,18 @@ void darRe(){
 
 void olharFrente(){
 
-  meuServo.write(90); //FRENTE
-  Serial.println("90 GRAUS");
-  // cudelay(7000);
+  meuServo.write(anguloFrente); 
+  delay(300);
 }
 
 void olharDireita(){
-  meuServo.write(0); //nao sei a direção lol faz o L
-  Serial.println("0 GRAUS");
-  //cudelay(7000);
+  meuServo.write(anguloDireita); 
+  delay(300);
 }
 
 void olharEsquerda(){
-  meuServo.write(180); //nao sei a direção lol faz o L
-  Serial.println("180 GRAUS");
-  //cudelay(7000);
+  meuServo.write(anguloEsquerda); 
+  delay(300);
 }
 
 void setup() {
@@ -130,7 +130,7 @@ void setup() {
 
   meuServo.attach(2);
 
-  // para e faz o L -- parado no começo
+  //  parado no começo
 
   estadoDirecao = 0 ;// frente
 
@@ -163,23 +163,20 @@ void loop() {
     if(estadoDirecao == 0){
       olharDireita();
       estadoDirecao = 1;
-      delay(2000);
+      delay(200);
     }
     else if(estadoDirecao == 1){
       olharEsquerda();
       estadoDirecao = 2;
-      delay(2000);
+      delay(200);
     }
     else if(estadoDirecao == 2){
       olharFrente();
       estadoDirecao = 0;
-      delay(2000);
-    }
-    else if(estadoDirecao == 3){ // fazer modo ré scr emoji chorando
-
+      delay(200);
     }
     else {
-      Serial.println("estado direcao fodido lol no if distance <= distmin");
+      Serial.println("estado direcao com erro no if distance <= distmin");
     }
  
   }
