@@ -23,7 +23,7 @@ int distanciaFrente, distanciaDireita, distanciaEsquerda;
 //    TEMPOS
 int tempoServo = 500;
 int tempoCurva = 1000;
-int tempoGiro180 = tempoCurva * 2;
+int tempoGiro180 = 500;
 int tempoFrente = 1000;
 int tempoRe = 300;
 
