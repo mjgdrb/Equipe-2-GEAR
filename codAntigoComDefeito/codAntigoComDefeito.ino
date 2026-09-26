@@ -3,8 +3,8 @@
 Servo meuServo;
 
 // sensor
-#define trigPin 3           // Trig Pin Of HC-SR04
-#define echoPin 4        // Echo Pin Of HC-SR04
+#define trigPin 3      
+#define echoPin 4    
 
 // motores
 #define MEf 8                 //esquerda motor frente
@@ -118,13 +118,13 @@ void olharEsquerda(){
 
 void setup() {
   Serial.begin(9600);
-  pinMode(MLa, OUTPUT);     // Set Motor Pins As O/P
+  pinMode(MLa, OUTPUT);    
   pinMode(MLb, OUTPUT);
   pinMode(MRa, OUTPUT);
   pinMode(MRb, OUTPUT);
 
-  pinMode(trigPin, OUTPUT);       // Set Trig Pin As O/P To Transmit Waves
-  pinMode(echoPin, INPUT);        //Set Echo Pin As I/P To Receive Reflected Waves
+  pinMode(trigPin, OUTPUT);  
+  pinMode(echoPin, INPUT);      
 
   pinMode(ENA, OUTPUT);
   pinMode(ENB, OUTPUT);
@@ -199,7 +199,7 @@ void loop() {
       delay(2000);
     }
     else {
-      Serial.println("estado direcao fodido lol no else if distance > 15");
+      Serial.println("estado direcao com erro no else if distance > 15");
     }
  
   }
