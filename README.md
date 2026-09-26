@@ -1,7 +1,7 @@
 Coisas para o micromouse
 
-testes
+*testes
 
-algoritmos
+*algoritmos
 
-circuitos
+*circuitos
